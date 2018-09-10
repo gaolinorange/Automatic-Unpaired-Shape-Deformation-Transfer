@@ -1,7 +1,7 @@
 # Automatic-Unpaired-Shape-Deformation-Transfer
 Code for "Automatic Unpaired Shape Deformation Transfer", Siggraph Asia 2018
 
-Now we release the VAE net, Sim net and ACAP representation. Next, we will release the Cyclegan based on our work and include more details soon.
+We will include more details soon.
 
 ## Note for VC-Gan 
 - Linux
