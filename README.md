@@ -1,4 +1,4 @@
-# [Automatic-Unpaired-Shape-Deformation-Transfer](https://geometrylearning.com)
+# [Automatic-Unpaired-Shape-Deformation-Transfer](http://geometrylearning.com/)
 Code for "Automatic Unpaired Shape Deformation Transfer", Siggraph Asia 2018
 <p align='center'>  
   <img src='imgs/teaser.jpg' width='880'/>
