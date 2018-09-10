@@ -9,6 +9,7 @@ We will include more details soon.
 - Linux
 - Python 2 or 3
 - NVIDIA GPU (larger than 8G) + CUDA cuDNN
+- Tensorflow 1.10
 
 
 ## Note for ACAP Lib
