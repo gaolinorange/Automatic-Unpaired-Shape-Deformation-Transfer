@@ -112,7 +112,7 @@ class convMESH():
         # >>>>>>>>>>>>>>>>>>>
         # >>>>>>>>>>>>>>>>>>>
         # >>>>>>>>>>>>>>>>>>>
-        # >>>>>>>>>>>>>>>>>>>yangjie
+        # 
         # ---------------------------------------------------a
         self.nb1_a = tf.constant(self.neighbour1_a, dtype='int32', shape=[self.pointnum1_a, self.maxdegree1_a],
                                  name='a/nb_relation1')
@@ -128,7 +128,6 @@ class convMESH():
         # self.embedding_inputs = tf.placeholder(tf.float32, [None, self.hidden_dim], name='embedding_inputs')
         self.object_stddev_a = tf.constant(np.concatenate((np.array([1, 1]).astype('float32'), 1
                                                            * np.ones(self.hidden_dim - 2).astype('float32'))))
-        # ----------------------------------------VAE para modify by yangjie 201712291200
         if layer >= 1:
             self.vae_n1_a, self.vae_e1_a = get_conv_weights(self.vertex_dim, self.vertex_dim, name='encoder/a/convw1')
             print("layer|%d" % (layer))
@@ -153,7 +152,7 @@ class convMESH():
         # self.vae_mean_dpara_a = tf.get_variable("decoder/a/mean_weights",
         #                                      [self.pointnum2_a * self.finaldim, self.hidden_dim],
         #                                      tf.float32, tf.random_normal_initializer(stddev=0.02))
-        # -------------------------------------------GAN para modify by yangjie 201712291201
+        # -------------------------------------------
         # self.gen_n1_a, self.gen_e1_a = self.get_conv_weights(self.vertex_dim, self.vertex_dim, name='gen/a/convw1')
         # self.gen_n2_a, self.gen_e2_a = self.get_conv_weights(self.vertex_dim, self.vertex_dim, name='gen/a/convw2')
         # self.gen_n3_a, self.gen_e3_a = self.get_conv_weights(self.vertex_dim, self.finaldim, name='gen/a/convw3')
@@ -215,7 +214,7 @@ class convMESH():
             tf.GraphKeys.REGULARIZATION_LOSSES, scope='decoder/a')
         self.r2_a += sum(reg_losses)
 
-        # ---------------------------------------------------bbbbbbbbbbbbb------------------------------
+        # ---------------------------------------------------bbbbbbbbb------------------------------
         self.nb1_b = tf.constant(self.neighbour1_b, dtype='int32', shape=[self.pointnum1_b, self.maxdegree1_b],
                                  name='b/nb_relation1')
         self.degrees1_b = tf.constant(self.degree1_b, dtype='float32', shape=[self.pointnum1_b, 1], name='b/degrees1')
@@ -225,7 +224,7 @@ class convMESH():
         # self.embedding_inputs = tf.placeholder(tf.float32, [None, self.hidden_dim], name='embedding_inputs')
         self.object_stddev_b = tf.constant(
             np.concatenate((np.array([1, 1]).astype('float32'), 1 * np.ones(self.hidden_dim - 2).astype('float32'))))
-        # ----------------------------------------VAE para modify by yangjie 201712291201
+        # ----------------------------------------
         # self.vae_n1_b, self.vae_e1_b = get_conv_weights(self.vertex_dim, self.vertex_dim, name='encoder/b/convw1')
         # self.vae_n2_b, self.vae_e2_b = get_conv_weights(self.vertex_dim, self.vertex_dim, name='encoder/b/convw2')
         # self.vae_n3_b, self.vae_e3_b = get_conv_weights(self.vertex_dim, self.finaldim, name='encoder/b/convw3')
@@ -256,7 +255,7 @@ class convMESH():
         # [self.pointnum2_b * self.finaldim, self.hidden_dim],
         # tf.float32,
         # tf.random_normal_initializer(stddev=0.02))
-        # -------------------------------------------GAN para modify by yangjie 201712291208
+        # --
         # self.gen_n1_b, self.gen_e1_b = self.get_conv_weights(self.vertex_dim, self.vertex_dim, name='gen/b/convw1')
         # self.gen_n2_b, self.gen_e2_b = self.get_conv_weights(self.vertex_dim, self.vertex_dim, name='gen/b/convw2')
         # self.gen_n3_b, self.gen_e3_b = self.get_conv_weights(self.vertex_dim, self.finaldim, name='gen/b/convw3')
@@ -315,12 +314,12 @@ class convMESH():
 
         self.r2_b += sum(reg_losses)
 
-        # <<<<<<<<<yangjie
+        # <<<<<<<<<
         # <<<<<<<<<
         # <<<<<<<<<
         # <<<<<<<<<
 
-        # >>>>>>>>>qiaoyiling
+        # >>>>>>>>>
         # >>>>>>>>>
         # >>>>>>>>>
         # >>>>>>>>>
@@ -328,7 +327,7 @@ class convMESH():
         self.loss_metric_l2 = sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES, scope='metric'))
 
 
-        # <<<<<<<<<qiaoyiling
+        # <<<<<<<<<
         # <<<<<<<<<
         # <<<<<<<<<
         # <<<<<<<<<
@@ -343,19 +342,19 @@ class convMESH():
         self.loss_metric = loss_mse(self.lf_dis, self.distance) * 1000 + self.loss_metric_l2
 
         # self.loss_vae = -ELBO_a - ELBO_b + 0.1 * self.r2_a + 0.1 * self.r2_b
-        # -------------------------------------------------modify by yangjie 201712291054
+        # -------------------------------------------------
         self.loss_vae_a = -ELBO_a + 0.15 * self.r2_a
         self.loss_vae_b = -ELBO_b + 0.15 * self.r2_b
-        # ------------------------------------------modify by yj end
+        # -----------------------------------------
 
         # ----------------------------------------------------train opts
         tf.summary.scalar('loss_metric', self.loss_metric)
         tf.summary.scalar('loss_metric_l2', self.loss_metric_l2)
         # tf.summary.scalar('loss_vae', self.loss_vae)
-        # ----------------------------------------------modify by yangjie 201712291054
+        # ---------------------------------------------
         tf.summary.scalar('loss_vae_a', self.loss_vae_a)
         tf.summary.scalar('loss_vae_b', self.loss_vae_b)
-        # ------------------------------------------modify by yj end
+        # ------------------------------------------
 
         tf.summary.scalar("nll_a", self.neg_loglikelihood_a)
         tf.summary.scalar("kl_a", self.KL_divergence_a)
@@ -365,42 +364,42 @@ class convMESH():
         tf.summary.scalar("L2_loss_b", self.r2_b)
 
         # self.optimizer_vae = tf.train.AdamOptimizer(speed, beta1=0.5, name='encoder')
-        # ----------------------------------------------------modify by yangjie 201712291054
+        # ----------------------------------------------------
         self.optimizer_vae_a = tf.train.AdamOptimizer(speed, name='encoder/a')
         self.optimizer_vae_b = tf.train.AdamOptimizer(speed, name='encoder/b')
-        # ------------------------------------------modify by yj end
+        # ------------------------------------------
 
         self.optimizer_metric_1 = tf.train.AdamOptimizer(speed, name='metric1')
         self.optimizer_metric_2 = tf.train.AdamOptimizer(speed / 20.0, name='metric2')
 
         # variables_encoder = slim.get_variables(scope="encoder")
-        # ------------------------------------------------------modify by yangjie 201712291110
+        # ------------------------------------------------------
         variables_encoder_a = slim.get_variables(scope="encoder/a")
         variables_encoder_b = slim.get_variables(scope="encoder/b")
         variables_decoder_a = slim.get_variables(scope="decoder/a")
         variables_decoder_b = slim.get_variables(scope="decoder/b")
-        # ------------------------------------------modify by yj end
+        # -----------------------------------------
         # variables_decoder = slim.get_variables(scope="decoder")
         variables_metric = slim.get_variables(scope="metric")
 
         # train_variables_vae = []
-        # ----------------------------------------------modify by yj 201712291113
+        # --------------------------------------------
         train_variables_vae_a = []
         train_variables_vae_b = []
         train_variables_vae_all = []
         variables_vae_all = []
         variables_vae_a = []
         variables_vae_b = []
-        # ------------------------------------------modify by yj end
+        # ------------------------------------------
         train_variables_metric = []
         # ---------------------------------------------test para
         variables_vae_metric = []
 
-        # ----------------select trainable variables for every part ( VAE, metric, GAN)
+        # ----------------select trainable variables for every par
         # for v in variables_encoder:
         #     if v in tf.trainable_variables():
         #         train_variables_vae.append(v)
-        # --------------------------------------------modify by yj 201712291114
+        # ------------------------------------------
         for v in variables_encoder_a:
             variables_vae_metric.append(v)
             variables_vae_a.append(v)
@@ -429,28 +428,28 @@ class convMESH():
             if v in tf.trainable_variables():
                 train_variables_vae_b.append(v)
                 train_variables_vae_all.append(v)
-        # ------------------------------------------modify by yj end
+        # -----------------------------------------
         for v in variables_metric:
             variables_vae_metric.append(v)
             if v in tf.trainable_variables():
                 train_variables_metric.append(v)
 
 
-        # -------------------------------------------------------modify by yj 2017122901111
+        # -----------------------------------------------------
         self.saver_vae_a = tf.train.Saver(variables_vae_a, max_to_keep=None)
         self.saver_vae_b = tf.train.Saver(variables_vae_b, max_to_keep=None)
         self.saver_vae_all = tf.train.Saver(variables_vae_all, max_to_keep=None)
-        # ------------------------------------------modify by yj end
+        # -----------------------------------------
         self.saver_metric = tf.train.Saver(variables_metric, max_to_keep=None)
 
-        # -------------------------------------------modify by yangjie
+        # -------------------------------------------
         self.train_op_vae_a = tf.contrib.training.create_train_op(self.loss_vae_a, self.optimizer_vae_a,
                                                                   variables_to_train=train_variables_vae_a,
                                                                   summarize_gradients=True)
         self.train_op_vae_b = tf.contrib.training.create_train_op(self.loss_vae_b, self.optimizer_vae_b,
                                                                   variables_to_train=train_variables_vae_b,
                                                                   summarize_gradients=True)
-        # ----------------------------------------------modify by yangjie end
+        # --------------------------------------------
         self.train_op_metric_1 = tf.contrib.training.create_train_op(self.loss_metric, self.optimizer_metric_1,
                                                                      variables_to_train=train_variables_metric,
                                                                      summarize_gradients=True)

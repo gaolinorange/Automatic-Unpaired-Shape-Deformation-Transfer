@@ -1,4 +1,4 @@
-# [Automatic-Unpaired-Shape-Deformation-Transfer](http://geometrylearning.com/)
+# [Automatic-Unpaired-Shape-Deformation-Transfer](http://geometrylearning.com/ausdt)
 Code for "Automatic Unpaired Shape Deformation Transfer", Siggraph Asia 2018
 <p align='center'>  
   <img src='imgs/teaser.jpg' width='880'/>
@@ -15,7 +15,8 @@ We will include more details soon.
 ## Note for ACAP Lib
 
 ### Prerequisites
-- Windows, Linux comming soon.
+- Windows is supported.
+- Linux comming soon.
 ### Dependencies
 - Install [GUROBI Optimizer 8.0](http://www.gurobi.com/)
 - Install [OpenMesh 7.0](https://www.openmesh.org/download/)
