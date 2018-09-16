@@ -42,7 +42,7 @@ logfolder = './' + timecurrent + 'test'
 class convMESH():
     VAE = 'VAE'
     METRIC = 'METRIC'
-    GAN = 'GAN'
+    GAN = 'GAN'  # the part of GAN is coming soon
 
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
