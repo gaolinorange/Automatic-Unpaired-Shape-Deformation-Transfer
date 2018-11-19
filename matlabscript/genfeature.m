@@ -4,7 +4,7 @@ if (~exist([modelfolder,'\simp'],'file'))
 end
 cmd=['ACAPOpt.exe ',modelfolder];
 dos(cmd);
-load([modelfolder,'\FeatureMatgao.mat']);
+%load([modelfolder,'\FeatureMat1.mat']);
 
-save([modelfolder,'\simp\FeatureMatgao1.mat'],'LOGRNEW','S');
+%save([modelfolder,'\simp\FeatureMat1.mat'],'LOGRNEW','S');
 end
