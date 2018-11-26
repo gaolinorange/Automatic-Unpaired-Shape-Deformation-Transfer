@@ -10,6 +10,7 @@ We will include more details soon.
 - Python 2 or 3
 - NVIDIA GPU (larger than 8G) + CUDA cuDNN
 - Tensorflow 1.10
+- We add a script 'matlabscript/GetICPandLFDDist.m' to compute the distance(similarity) between two models.
 
 
 ## Note for ACAP Lib
@@ -18,7 +19,7 @@ We will include more details soon.
 - Windows is supported.
 - Linux comming soon.
 ### Dependencies
-- Install [GUROBI Optimizer 8.0](http://www.gurobi.com/)
+- Install [GUROBI Optimizer 8.0](http://www.gurobi.com/), you must apply a license to active the gurobi to compute the larger optimizations.
 - Install [OpenMesh 7.0](https://www.openmesh.org/download/)
 - Install [Matlab 2017b](https://www.mathworks.com/)
 - Install [GMM 5.2](http://getfem.org/download.html)
@@ -31,13 +32,14 @@ We will include more details soon.
 If you find this useful for your research, please use the following.
 
 ```
-@article {gaovcgan2018,
-     author = {Gao, Lin and Yang, Jie and Qiao, Yi-Ling and Lai, Yu-Kun and Rosin, Paul L and Xu, Weiwei and Xia, Shihong},
-     title = {Automatic Unpaired Shape Deformation Transfer},
-     journal = {ACM Transactions on Graphics (Proceedings of ACM SIGGRAPH Asia 2018)},
-     year = {2018},
-     volume = {37},
-     pages = {To appear},
-     number = {6}
-
+@article{gao2018automatic,
+  title={Automatic unpaired shape deformation transfer},
+  author={Gao, Lin and Yang, Jie and Qiao, Yi-Ling and Lai, Yukun and Rosin, Paul and Xu, Weiwei and Xia, Shihong},
+  journal={ACM Transactions on Graphics},
+  volume={37},
+  number={6},
+  pages={1--15},
+  year={2018},
+  publisher={Association for Computing Machinery (ACM)}
+}
 ```
