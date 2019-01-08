@@ -1,4 +1,4 @@
-import model as vagan
+import model as vcgan
 import tensorflow as tf
 import argparse,os
 from train_simnet import *
@@ -20,29 +20,30 @@ parser.add_argument('--test_gan', type=bool, default=True, help='Output Sim Net 
 parser.add_argument('--lambda_2', type=float, default=10.0, help='the weight of reconstructing mesh [Default: 10.0]')
 parser.add_argument('--vae_ablity', type=float, default=0.0, help='% percent to test the vae [Default: 0.0]')
 parser.add_argument('--logfolder', type=str, default='./', help='the output dir [Default: ./]')
+parser.add_argument('--tb', type=bool, default=False, help='tensorboard use or not [Default: False]')
 FLAGS = parser.parse_args()
 
 
-vagan.n_epoch_Vae = FLAGS.n_epoch_Vae
-vagan.n_epoch_Metric_1 = FLAGS.n_epoch_Metric_1
-vagan.n_epoch_Metric_2 = FLAGS.n_epoch_Metric_2
-vagan.n_epoch_Gan = FLAGS.n_epoch_Gan
+vcgan.n_epoch_Vae = FLAGS.n_epoch_Vae
+vcgan.n_epoch_Metric_1 = FLAGS.n_epoch_Metric_1
+vcgan.n_epoch_Metric_2 = FLAGS.n_epoch_Metric_2
+vcgan.n_epoch_Gan = FLAGS.n_epoch_Gan
 
-vagan.hidden_dim = FLAGS.hidden_dim
+vcgan.hidden_dim = FLAGS.hidden_dim
 
-vagan.dataname_a = FLAGS.dataname_a
-vagan.dataname_b = FLAGS.dataname_b
-vagan.test_vae = FLAGS.test_vae
-vagan.test_gan = FLAGS.test_gan
-vagan.tb = FLAGS.tb
-vagan.lambda_2 = FLAGS.lambda_2
-vagan.vae_ablity = FLAGS.vae_ablity
-vagan.logfolder = FLAGS.logfolder
+vcgan.dataname_a = FLAGS.dataname_a
+vcgan.dataname_b = FLAGS.dataname_b
+vcgan.test_vae = FLAGS.test_vae
+vcgan.test_gan = FLAGS.test_gan
+vcgan.tb = FLAGS.tb
+vcgan.lambda_2 = FLAGS.lambda_2
+vcgan.vae_ablity = FLAGS.vae_ablity
+vcgan.logfolder = FLAGS.logfolder
 
 os.environ["CUDA_VISIBLE_DEVICES"] = str(FLAGS.gpu)
 
 
-train_model = vagan.convMESH()
+train_model = vcgan.convMESH()
 
 with tf.Session(config=train_model.config) as train_model.sess:
     train_model.train_pre()
