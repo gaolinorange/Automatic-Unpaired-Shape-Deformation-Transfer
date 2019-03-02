@@ -9,7 +9,7 @@ end
 vdensemeshlist=dir([densemesh,'\*.obj']);
 [~,i]=sort_nat({vdensemeshlist.name});
 vdensemeshlist=vdensemeshlist(i);
-fv=load([densemesh,'\simp\FeatureMatgao.mat']);
+fv=load([densemesh,'\simp\FeatureMat1.mat']);
 
 [vdensemesh,~,~,~,~,VVdense,cotweight_dense]=cotlp([densemesh,'\',vdensemeshlist(1).name]);
     if nargin<2
