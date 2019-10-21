@@ -16,6 +16,60 @@ class Id:
         print('A: %s\nB: %s'%(self.Ia, self.Ib))
 
 
+def convlayer_pooling(input_feature, input_dim, output_dim, nb, cotw, name='meshconv', training=True,
+                      special_activation=True,
+                      no_activation=False, bn=True):
+    with tf.variable_scope(name) as scope:
+        scope.set_regularizer(tf.contrib.layers.l2_regularizer(scale=1.0))
+
+        padding_feature = tf.zeros([tf.shape(input_feature)[0], 1, input_dim], tf.float32)
+
+        padded_input = tf.concat([padding_feature, input_feature], 1)
+
+        def compute_nb_feature(input_f):
+            return tf.gather(input_f, nb) * cotw
+
+        total_nb_feature = tf.map_fn(compute_nb_feature, padded_input)
+        mean_nb_feature = tf.reduce_sum(total_nb_feature, axis=2)
+
+        nb_weights = tf.get_variable("nb_weights", [input_dim, output_dim], tf.float32,
+                                     tf.random_normal_initializer(stddev=0.02))
+        nb_bias = tf.get_variable("nb_bias", [output_dim], tf.float32, initializer=tf.constant_initializer(0.0))
+        nb_feature = tf.tensordot(mean_nb_feature, nb_weights, [[2], [0]]) + nb_bias
+
+        edge_weights = tf.get_variable("edge_weights", [input_dim, output_dim], tf.float32,
+                                       tf.random_normal_initializer(stddev=0.02))
+        edge_bias = tf.get_variable("edge_bias", [output_dim], tf.float32, initializer=tf.constant_initializer(0.0))
+        edge_feature = tf.tensordot(input_feature, edge_weights, [[2], [0]]) + edge_bias
+
+        total_feature = edge_feature + nb_feature
+
+        if not bn:
+            fb = total_feature
+        else:
+            fb = batch_norm_wrapper(total_feature, is_training=training)
+
+        if no_activation:
+            fa = fb
+            print('no activation')
+        elif special_activation == 'sigmoid':
+            fa = 2.0*tf.nn.sigmoid(fb)-1.0
+            print('sigmoid')
+        elif special_activation == 'l_relu':
+            fa = leaky_relu(fb)
+            print('l_relu')
+        elif special_activation == 'softsign':
+            fa = tf.nn.softsign(fb)
+            print('softsign')
+        elif special_activation == 'softplusplus':
+            fa = softplusplus(fb)
+            print('softplusplus')
+        else:
+            fa = tf.nn.tanh(fb)
+            print('tanh')
+
+        return fa
+
 
 def newconvlayer_pooling(input_feature, input_dim, output_dim, nb_weights, edge_weights, nb, cotw,
                          name='meshconvpooling',
@@ -424,24 +478,3 @@ def gaussian_mixture(batch_size, n_dim=2, n_labels=10, x_var=0.5, y_var=0.1, lab
 
     return z
 
-
-def swiss_roll(batch_size, n_dim=2, n_labels=10, label_indices=None):
-    if n_dim != 2:
-        raise Exception("n_dim must be 2.")
-
-    def sample(label, n_labels):
-        uni = np.random.uniform(0.0, 1.0) / float(n_labels) + float(label) / float(n_labels)
-        r = sqrt(uni) * 3.0
-        rad = np.pi * 4.0 * sqrt(uni)
-        x = r * cos(rad)
-        y = r * sin(rad)
-        return np.array([x, y]).reshape((2,))
-
-    z = np.zeros((batch_size, n_dim), dtype=np.float32)
-    for batch in range(batch_size):
-        for zi in range(int(n_dim / 2)):
-            if label_indices is not None:
-                z[batch, zi * 2:zi * 2 + 2] = sample(label_indices[batch], n_labels)
-            else:
-                z[batch, zi * 2:zi * 2 + 2] = sample(np.random.randint(0, n_labels), n_labels)
-    return z

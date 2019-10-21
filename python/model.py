@@ -1,5 +1,5 @@
 # coding: utf-8
-import os
+import os, pickle
 import time
 
 import tensorflow.contrib.slim as slim
@@ -14,8 +14,8 @@ n_epoch_Gan = 10000
 hidden_dim = 128
 batchsize = 128
 
-dataname_a = 'cat'
-dataname_b = 'lion'
+dataname_a = 'horse'
+dataname_b = 'camel'
 featurefile_a = './'+dataname_a+'.mat'
 featurefile_b = './'+dataname_b+'.mat'
 lightfeildmat = dataname_a+dataname_b+'lfd.mat'
@@ -25,7 +25,7 @@ resultmax = 0.95
 resultmin = -0.95
 test_vae = True
 test_gan = True
-useS = True
+useS = False
 tb = False
 lambda_2 = 10.0
 vae_ablity = 0.0
@@ -42,7 +42,7 @@ logfolder = './' + timecurrent + 'test'
 class convMESH():
     VAE = 'VAE'
     METRIC = 'METRIC'
-    GAN = 'GAN'  # the part of GAN is coming soon
+    GAN = 'GAN'
 
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
@@ -52,16 +52,34 @@ class convMESH():
         self.sess = None
         if not os.path.isdir(logfolder):
             os.mkdir(logfolder)
-
+        print(featurefile_a)
         self.feature_a, self.neighbour1_a, self.degree1_a, self.logrmin_a, self.logrmax_a, self.smin_a, self.smax_a, self.modelnum_a, \
         self.pointnum1_a, self.maxdegree1_a, self.L1_a, self.cotw1_a = load_data(featurefile_a, resultmin, resultmax, useS=useS)
 
         self.feature_b, self.neighbour1_b, self.degree1_b, self.logrmin_b, self.logrmax_b, self.smin_b, self.smax_b, self.modelnum_b, \
-        self.pointnum1_b, self.maxdegree1_b, \
-        self.L1_b, self.L2_b, self.cotw1_b, self.cotw2_b = load_data(featurefile_b, resultmin, resultmax, useS=useS)
+        self.pointnum1_b, self.maxdegree1_b, self.L1_b, self.cotw1_b = load_data(featurefile_b, resultmin, resultmax, useS=useS)
 
         self.lf_matrix, self.lf_matrix_min, self.lf_matrix_max, self.metric_lz_a, self.matric_lz_b = load_data_old(
             lightfeildmat, 2, 0.05)
+        if os.path.isfile("id.dat"):
+            id = pickle.load(open('id.dat', 'rb'))
+            id.show()
+            self.Ia = id.Ia
+            self.Ib = id.Ib
+        else:
+            Ia = np.arange(len(self.feature_a))
+            Ib = np.arange(len(self.feature_b))
+            self.Ia = random.sample(list(Ia), int(len(self.feature_a) * (1 - vcgan.vae_ablity)))
+            self.Ib = random.sample(list(Ib), int(len(self.feature_b) * (1 - vcgan.vae_ablity)))
+            id = Id(self.Ia, self.Ib)
+            # id.show()
+            f = open('id.dat', 'wb')
+            pickle.dump(id, f, 0)
+            f.close()
+            id = pickle.load(open('id.dat', 'rb'))
+            id.show()
+        self.Ia_C=list(set(np.arange(len(self.feature_a))).difference(set(self.Ia)))
+        self.Ib_C=list(set(np.arange(len(self.feature_b))).difference(set(self.Ib)))
         print(self.lf_matrix[0][0])
         print(self.lf_matrix[0][1])
         print(np.shape(self.metric_lz_a))
@@ -77,7 +95,6 @@ class convMESH():
         self.dataset_name_a = dataname_a
         self.pointnum1_a = self.pointnum1_a
         self.maxdegree1_a = self.maxdegree1_a
-        self.mapping1_col_a = self.mapping1_col_a
         self.model_num_a = self.modelnum_a
         self.lambda1_a = 10.0
         self.lambda2_a = lambda_2
@@ -85,7 +102,6 @@ class convMESH():
         self.dataset_name_b = dataname_b
         self.pointnum1_b = self.pointnum1_b
         self.maxdegree1_b = self.maxdegree1_b
-        self.mapping1_col_b = self.mapping1_col_b
         self.model_num_b = self.modelnum_b
         self.lambda1_b = 10.0
         self.lambda2_b = lambda_2
@@ -251,24 +267,6 @@ class convMESH():
                                              [self.pointnum1_b * self.finaldim, self.hidden_dim],
                                              tf.float32,
                                              tf.random_normal_initializer(stddev=0.02))
-        # self.vae_mean_dpara_b = tf.get_variable("decoder/b/mean_weights",
-        # [self.pointnum2_b * self.finaldim, self.hidden_dim],
-        # tf.float32,
-        # tf.random_normal_initializer(stddev=0.02))
-        # --
-        # self.gen_n1_b, self.gen_e1_b = self.get_conv_weights(self.vertex_dim, self.vertex_dim, name='gen/b/convw1')
-        # self.gen_n2_b, self.gen_e2_b = self.get_conv_weights(self.vertex_dim, self.vertex_dim, name='gen/b/convw2')
-        # self.gen_n3_b, self.gen_e3_b = self.get_conv_weights(self.vertex_dim, self.finaldim, name='gen/b/convw3')
-        #
-        # self.dis_n3_b, self.dis_e3_b = self.get_conv_weights(self.finaldim, self.vertex_dim, name='dis/b/convw1')
-        # self.dis_n2_b, self.dis_e2_b = self.get_conv_weights(self.vertex_dim, self.vertex_dim, name='dis/b/convw2')
-        # self.dis_n1_b, self.dis_e1_b = self.get_conv_weights(self.vertex_dim, self.vertex_dim, name='dis/b/convw3')
-        #
-        # self.gen_dense_b = tf.get_variable("gen/b/dense_weights", [self.hidden_dim, self.pointnum2_a * self.finaldim],
-        #                                    tf.float32,
-        #                                    tf.random_normal_initializer(stddev=0.02))
-        # self.dis_dense_b = tf.get_variable("dis/b/dense_weights", [self.pointnum2_a * self.finaldim, 1], tf.float32,
-        #                                    tf.random_normal_initializer(stddev=0.02))
 
         self.z_mean_b, self.z_stddev_b = self.encoder_b(self.inputs_b)
         self.guessed_z_b = self.z_mean_b + self.z_stddev_b * self.random_b
@@ -325,7 +323,26 @@ class convMESH():
         # >>>>>>>>>
         self.distance = self.metric_net(self.z_mean_test_a, self.z_mean_test_b)
         self.loss_metric_l2 = sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES, scope='metric'))
+        
+        self.random_gen_latent_a = self.gen_a(self.random_a)
+        self.random_gen_latent_b = self.gen_b(self.random_b)
+        self.random_gen_feature_a = self.decoder_b(self.random_gen_latent_a, train=False)
+        self.random_gen_feature_b = self.decoder_a(self.random_gen_latent_b, train=False)
 
+        self.gen_latent_a = self.gen_a(self.z_mean_test_a, reuse=True)
+        self.gen_latent_b = self.gen_b(self.z_mean_test_b, reuse=True)
+        self.gen_feature_a = self.decoder_b(self.gen_latent_a, train=False)
+        self.gen_feature_b = self.decoder_a(self.gen_latent_b, train=False)
+
+        self.dis_real_a = self.dis_a(self.generated_mesh_test_b)
+        self.dis_real_b = self.dis_b(self.generated_mesh_test_a)
+        self.dis_fake_a = self.dis_a(self.random_gen_feature_a, reuse=True)
+        self.dis_fake_b = self.dis_b(self.random_gen_feature_b, reuse=True)
+        self.real_label = tf.multiply(tf.ones_like(self.dis_real_a), 1.00)
+        self.fake_label = tf.add(tf.zeros_like(self.dis_fake_a), 0.00)
+
+        self.cycle_z_a = self.gen_b(self.gen_latent_a, reuse=True)
+        self.cycle_z_b = self.gen_a(self.gen_latent_b, reuse=True)
 
         # <<<<<<<<<
         # <<<<<<<<<
@@ -335,11 +352,35 @@ class convMESH():
         # ---------------------------------------------------test
         # ---------------------------------------------------Metric
         self.distance_test = self.metric_net(self.random_a, self.random_b, reuse=True)
+        # ---------------------------------------------------test Cycle
+        # x<----->decoder x
+        # gx<------>decoder gx
+        # fgx<-------> decoder fgx
+        self.decoder_x = self.decoder_a(self.z_mean_test_a, train=False)
+        self.decoder_gx = self.decoder_b(self.gen_latent_a, train=False)
+        self.decoder_fgx = self.decoder_a(self.cycle_z_a, train=False)
 
+        self.decoder_y = self.decoder_b(self.z_mean_test_b, train=False)
+        self.decoder_fy = self.decoder_a(self.gen_latent_b, train=False)
+        self.decoder_gfy = self.decoder_b(self.cycle_z_b, train=False)
         # ---------------------------------------------------loss
-
+        self.loss_mapping = tf.reduce_mean(self.metric_net(self.random_a, self.random_gen_latent_a, training=False) \
+                                           + self.metric_net(self.random_gen_latent_b, self.random_b, training=False))
+        self.loss_mapping = self.loss_mapping * 20.0
+        
         self.loss_metric_l2 = self.loss_metric_l2 * 0.1
         self.loss_metric = loss_mse(self.lf_dis, self.distance) * 1000 + self.loss_metric_l2
+
+        self.loss_cycle = loss_mse(self.z_mean_test_a, self.cycle_z_a) + loss_mse(self.z_mean_test_b, self.cycle_z_b)
+        self.loss_cycle = self.loss_cycle * 20.0
+        self.loss_d = loss_mse(self.dis_real_a, self.real_label) + loss_mse(self.dis_real_b, self.real_label) \
+                      + loss_mse(self.dis_fake_a, self.fake_label) + loss_mse(self.dis_fake_b, self.fake_label)
+        self.loss_d = self.loss_d * 10
+        self.loss_g = loss_mse(self.dis_fake_a, self.real_label) + loss_mse(self.dis_fake_b, self.real_label)
+        self.loss_g = self.loss_g * 20
+
+        self.loss_g_all = 1000.0 * self.loss_mapping + self.loss_g + self.loss_cycle
+        self.loss_d_all = self.loss_d
 
         # self.loss_vae = -ELBO_a - ELBO_b + 0.1 * self.r2_a + 0.1 * self.r2_b
         # -------------------------------------------------
@@ -368,7 +409,8 @@ class convMESH():
         self.optimizer_vae_a = tf.train.AdamOptimizer(speed, name='encoder/a')
         self.optimizer_vae_b = tf.train.AdamOptimizer(speed, name='encoder/b')
         # ------------------------------------------
-
+        self.optimizer_g = tf.train.AdamOptimizer(speed, name='gen')
+        self.optimizer_d = tf.train.AdamOptimizer(speed, name='dis')
         self.optimizer_metric_1 = tf.train.AdamOptimizer(speed, name='metric1')
         self.optimizer_metric_2 = tf.train.AdamOptimizer(speed / 20.0, name='metric2')
 
@@ -381,6 +423,8 @@ class convMESH():
         # -----------------------------------------
         # variables_decoder = slim.get_variables(scope="decoder")
         variables_metric = slim.get_variables(scope="metric")
+        variables_g = slim.get_variables(scope="gen")
+        variables_d = slim.get_variables(scope="dis")
 
         # train_variables_vae = []
         # --------------------------------------------
@@ -392,6 +436,9 @@ class convMESH():
         variables_vae_b = []
         # ------------------------------------------
         train_variables_metric = []
+        train_variables_g = []
+        train_variables_d = []
+        varaibles_gan_all = []
         # ---------------------------------------------test para
         variables_vae_metric = []
 
@@ -429,6 +476,14 @@ class convMESH():
                 train_variables_vae_b.append(v)
                 train_variables_vae_all.append(v)
         # -----------------------------------------
+        for v in variables_g:
+            varaibles_gan_all.append(v)
+            if v in tf.trainable_variables():
+                train_variables_g.append(v)
+        for v in variables_d:
+            varaibles_gan_all.append(v)
+            if v in tf.trainable_variables():
+                train_variables_d.append(v)
         for v in variables_metric:
             variables_vae_metric.append(v)
             if v in tf.trainable_variables():
@@ -440,7 +495,11 @@ class convMESH():
         self.saver_vae_b = tf.train.Saver(variables_vae_b, max_to_keep=None)
         self.saver_vae_all = tf.train.Saver(variables_vae_all, max_to_keep=None)
         # -----------------------------------------
+        #self.saver_gan = tf.train.Saver(variables_g, max_to_keep=None)
+        #self.saver_dis = tf.train.Saver(variables_d, max_to_keep=None)
+        self.saver_gan = tf.train.Saver(varaibles_gan_all, max_to_keep=None)
         self.saver_metric = tf.train.Saver(variables_metric, max_to_keep=None)
+        #self.saver = tf.train.Saver(max_to_keep=None)
 
         # -------------------------------------------
         self.train_op_vae_a = tf.contrib.training.create_train_op(self.loss_vae_a, self.optimizer_vae_a,
@@ -450,6 +509,12 @@ class convMESH():
                                                                   variables_to_train=train_variables_vae_b,
                                                                   summarize_gradients=True)
         # --------------------------------------------
+        self.train_op_g = tf.contrib.training.create_train_op(self.loss_g_all, self.optimizer_g,
+                                                              variables_to_train=train_variables_g,
+                                                              summarize_gradients=True)
+        self.train_op_d = tf.contrib.training.create_train_op(self.loss_d_all, self.optimizer_d,
+                                                              variables_to_train=train_variables_d,
+                                                              summarize_gradients=True)
         self.train_op_metric_1 = tf.contrib.training.create_train_op(self.loss_metric, self.optimizer_metric_1,
                                                                      variables_to_train=train_variables_metric,
                                                                      summarize_gradients=True)
@@ -529,7 +594,6 @@ class convMESH():
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> A  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
     def encoder_a(self, input_feature, train=True, reuse=False):
-        global conv1
         with tf.variable_scope("encoder/a") as scope:
             scope.set_regularizer(tf.contrib.layers.l2_regularizer(scale=1.0))
             if not train or reuse:
@@ -676,6 +740,54 @@ class convMESH():
 
         return conv1
 
+    def gen_a(self, latent_tensor, train=True, reuse=False):  # TODO: can shu gongxiang ?
+        with tf.variable_scope("gen/a") as scope:
+            scope.set_regularizer(tf.contrib.layers.l2_regularizer(scale=1.0))
+            if not train or reuse:
+                train = False
+                reuse = True
+                scope.reuse_variables()
+
+            h1 = linear(latent_tensor, self.hidden_dim, 512, 'h1')
+            h1bn = batch_norm_wrapper(h1, name='h1bn', is_training=train, decay=0.9)
+            h1a = leaky_relu(h1bn)
+
+            h2 = linear(h1a, 512, 1024, 'h2')
+            h2bn = batch_norm_wrapper(h2, name='h2bn', is_training=train, decay=0.9)
+            h2a = leaky_relu(h2bn)
+
+            h3 = linear(h2a, 1024, 2048, 'h3')
+            h3bn = batch_norm_wrapper(h3, name='h3bn', is_training=train, decay=0.9)
+            h3a = leaky_relu(h3bn)
+
+            h4 = linear(h3a, 2048, 1024, 'h4')
+            h4bn = batch_norm_wrapper(h4, name='h4bn', is_training=train, decay=0.9)
+            h4a = leaky_relu(h4bn)
+            h5a=h4a
+            # h5 = linear(h4a, 512, 256, 'h5')
+            # h5bn = batch_norm_wrapper(h5, name='h5bn', is_training=train, decay=0.9)
+            # h5a = leaky_relu(h5bn)
+
+            out_mean = linear(h5a, 1024, self.hidden_dim, 'out_mean')
+            return tf.nn.tanh(out_mean) + latent_tensor
+
+    def dis_a(self, input_feature, train=True, reuse=False):
+        with tf.variable_scope("dis/a") as scope:
+            scope.set_regularizer(tf.contrib.layers.l2_regularizer(scale=1.0))
+            if not train or reuse:
+                train = False
+                reuse = True
+                scope.reuse_variables()
+
+            conv1 = convlayer_pooling(input_feature, self.vertex_dim, self.vertex_dim, self.nb1_b, self.cw1_b, name='conv1', training=train, bn = False)
+            # conv1 = convlayer_pooling(conv1, self.vertex_dim, self.vertex_dim, self.nb1_b, self.cw1_b, name='conv2', training=train)
+
+            conv1 = convlayer_pooling(conv1, self.vertex_dim, self.finaldim, self.nb1_b, self.cw1_b, name='conv3', training=train, bn=False)
+            l0 = tf.reshape(conv1, [tf.shape(conv1)[0], self.pointnum1_b * self.finaldim])
+
+            l0 = linear(l0, self.pointnum1_b * self.finaldim, 1, 'dense1')
+            #return linear(l0, 2048, 1, 'dense2')
+            return l0
 
     # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< A  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -820,6 +932,58 @@ class convMESH():
 
         return conv1
 
+    def gen_b(self, latent_tensor, train=True, reuse=False):
+        with tf.variable_scope("gen/b") as scope:
+            scope.set_regularizer(tf.contrib.layers.l2_regularizer(scale=1.0))
+            if not train or reuse:
+                train = False
+                reuse = True
+                scope.reuse_variables()
+
+            h1 = linear(latent_tensor, self.hidden_dim, 512, 'h1')
+            h1bn = batch_norm_wrapper(h1, name='h1bn', is_training=train, decay=0.9)
+            h1a = leaky_relu(h1bn)
+
+            h2 = linear(h1a, 512, 1024, 'h2')
+            h2bn = batch_norm_wrapper(h2, name='h2bn', is_training=train, decay=0.9)
+            h2a = leaky_relu(h2bn)
+
+            h3 = linear(h2a, 1024, 2048, 'h3')
+            h3bn = batch_norm_wrapper(h3, name='h3bn', is_training=train, decay=0.9)
+            h3a = leaky_relu(h3bn)
+
+            h4 = linear(h3a, 2048, 1024, 'h4')
+            h4bn = batch_norm_wrapper(h4, name='h4bn', is_training=train, decay=0.9)
+            h4a = leaky_relu(h4bn)
+            h5a=h4a
+            # h5 = linear(h4a, 512, 256, 'h5')
+            # h5bn = batch_norm_wrapper(h5, name='h5bn', is_training=train, decay=0.9)
+            # h5a = leaky_relu(h5bn)
+
+            out_mean = linear(h5a, 1024, self.hidden_dim, 'out_mean')
+            return tf.nn.tanh(out_mean)
+
+    def dis_b(self, input_feature, train=True, reuse=False):
+        with tf.variable_scope("dis/b") as scope:
+            scope.set_regularizer(tf.contrib.layers.l2_regularizer(scale=1.0))
+            if not train or reuse:
+                train = False
+                reuse = True
+                scope.reuse_variables()
+
+            conv1 = convlayer_pooling(input_feature, self.vertex_dim, self.vertex_dim, self.nb1_a, self.cw1_a,
+                                      name='conv1', training=train)
+            # conv1 = convlayer_pooling(conv1, self.vertex_dim, self.vertex_dim, self.nb1_a, self.cw1_a,
+                                      # name='conv2', training=train)
+
+            conv1 = convlayer_pooling(conv1, self.vertex_dim, self.finaldim, self.nb1_a, self.cw1_a,
+                                      name='conv3', training=train, bn=False)
+            l0 = tf.reshape(conv1, [tf.shape(conv1)[0], self.pointnum1_a * self.finaldim])
+
+            l0 = linear(l0, self.pointnum1_a * self.finaldim, 1, 'dense1')
+            #return linear(l0, 2048, 1, 'dense2')
+            return l0
+
      # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< B  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
     def train_pre(self):
@@ -876,12 +1040,16 @@ class convMESH():
             saver = self.saver_metric
         else:
             saver = self.saver_gan
+        from tensorflow.python.tools import inspect_checkpoint as chkp
 
         ckpt = tf.train.get_checkpoint_state(checkpoint_dir)
+
         if ckpt and ckpt.model_checkpoint_path:
             ckpt_name = os.path.basename(ckpt.model_checkpoint_path)
-
+            #chkp.print_tensors_in_checkpoint_file(os.path.join(checkpoint_dir, ckpt_name), tensor_name='', all_tensors=False, all_tensor_names=True)
             saver.restore(self.sess, os.path.join(checkpoint_dir, ckpt_name))
+
+            #chkp._count_total_params
             counter = int(next(re.finditer("(\d+)(?!.*\d)", ckpt_name)).group(0))
             print(" [*] Success to read {}".format(ckpt_name))
             return True, counter

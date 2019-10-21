@@ -5,7 +5,6 @@ import model as vcgan
 import random, pickle, time, model
 
 from utils import *
-from test_utils import *
 
 
 def train_metric_1(_model):
@@ -51,7 +50,7 @@ def train_metric_1(_model):
                                          _model.random_b: random_b, _model.lf_dis: Ilf})
             _model.write.add_summary(s, step)
 
-        if (step + 1) % 2000 == 0:
+        if (step + 1) % 1 == 0:
             print(vcgan.logfolder)
             test_metric(_model, step + 1)
             _model.saver_metric.save(_model.sess, _model.checkpoint_dir_metric + '/metric.model', global_step=step + 1)
@@ -120,12 +119,47 @@ def train_metric_2(_model):
     print('------------------------------------train cycleGAN-----------------------------------------')
 
 
+def test_metric(_model, step):
+    logfolder = vcgan.logfolder
+    if not os.path.isdir(logfolder + '/test_metric'):
+        os.mkdir(logfolder + '/test_metric')
+    random_batch_a = np.random.normal(loc=0.0, scale=1.0, size=(50, _model.hidden_dim))
+    random_batch_b = np.random.normal(loc=0.0, scale=1.0, size=(50, _model.hidden_dim))
+    testa, testb, test_dis = _model.sess.run([_model.test_mesh_a, _model.test_mesh_b, _model.distance_test],
+                                           feed_dict={_model.random_a: random_batch_a, _model.random_b: random_batch_b})
+    fv1b = recover_data(testb, _model.logrmin_b, _model.logrmax_b, _model.smin_b, _model.smax_b, vcgan.resultmin, vcgan.resultmax)
+    fv1a = recover_data(testa, _model.logrmin_a, _model.logrmax_a, _model.smin_a, _model.smax_a, vcgan.resultmin, vcgan.resultmax)
+    test_dis = recover_data_old(test_dis, _model.lf_matrix_min, _model.lf_matrix_max, 0.05, 2.0)
+    # test_dis = recover_lfd(test_dis, _model.lf_matrix_mean,_model.lf_matrix_std)
+
+    name = logfolder + '/test_metric/testmetric_random'+str(step)+'.h5'
+    f = h5py.File(name, 'w')
+    f['test_dis'] = test_dis
+    f['test_mesh_a'] = fv1a
+    f['test_mesh_b'] = fv1b
+    f.close()
+
+    za, zb = _model.sess.run([_model.z_mean_a, _model.z_mean_b], feed_dict={_model.inputs_a: _model.feature_a, _model.inputs_b: _model.feature_b})
+    id = np.min([np.shape(za)[0],np.shape(zb)[0]])
+    testa, testb, test_dis = _model.sess.run([_model.test_mesh_a, _model.test_mesh_b, _model.distance_test],
+                                           feed_dict={_model.random_a: za[0:id], _model.random_b: zb[0:id]})
+    fv1b = recover_data(testb, _model.logrmin_b, _model.logrmax_b, _model.smin_b, _model.smax_b, vcgan.resultmin, vcgan.resultmax)
+    fv1a = recover_data(testa, _model.logrmin_a, _model.logrmax_a, _model.smin_a, _model.smax_a, vcgan.resultmin, vcgan.resultmax)
+    test_dis = recover_data_old(test_dis, _model.lf_matrix_min, _model.lf_matrix_max, 0.05, 2.0)
+    # test_dis = recover_lfd(test_dis, _model.lf_matrix_mean,_model.lf_matrix_std)
+    name = logfolder + '/test_metric/testmetric_recon'+str(step)+'.h5'
+    f = h5py.File(name, 'w')
+    f['test_dis'] = test_dis
+    f['test_mesh_a'] = fv1a
+    f['test_mesh_b'] = fv1b
+    f.close()
+
+
 def train_metric(_model):
     if _model.start_step_metric < vcgan.n_epoch_Metric_1:
         train_metric_1(_model)
         train_metric_2(_model)
     else:
         train_metric_2(_model)
-
 
 
