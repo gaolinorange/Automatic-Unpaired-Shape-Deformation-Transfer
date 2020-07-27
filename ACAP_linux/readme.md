@@ -1,7 +1,10 @@
 
 # As-Consistent-As-Possible Deformation Representation (ACAP)
 The implementation of ACAP.
-Part of our sparse deformation [algorithm](https://arxiv.org/abs/1709.01250), ACAP: Sparse Data Driven Mesh Deformation
+
+Part of our sparse deformation [algorithm](https://arxiv.org/abs/1709.01250)
+
+ACAP: Sparse Data Driven Mesh Deformation
 Lin Gao, Yu-Kun Lai, Jie Yang, Ling-Xiao Zhang, Shihong Xia, Leif Kobbelt
 IEEE Transactions on Visualization and Computer Graphics, 2019
 
@@ -19,14 +22,14 @@ Note: we test the code on the OS platform with ```ubuntu 18.04.3, g++ 7.5, gcc 7
 
 ## ACAP Library
 
-1. For the library ```Boost``` and ```Blas & Lapack```, you can run the following command to install them
+### 1. ```Boost``` and ```Blas & Lapack```
 
 ```sh
 sudo apt-get install libboost-all-dev
 sudo apt install libopenblas-dev libblas-dev liblapack-dev
 ```
 
-2. Gurobi
+### 2. Gurobi
 
 We have provide the ```gurobi8.0.1``` libiary in the folder ```3rd```, you can download it by yourself on the [GUROBI website](https://www.gurobi.com/downloads/gurobi-optimizer-eula/). Then, you should regist a academic license to active the software by the command:
 
@@ -37,7 +40,7 @@ We have provide the ```gurobi8.0.1``` libiary in the folder ```3rd```, you can d
 Note: The above instructions also can be found in the GUROBI website.
 
 
-3. Install
+### 3. Install
 
 ```sh
 git clone --recursive https://github.com/gaolinorange/Automatic-Unpaired-Shape-Deformation-Transfer.git
@@ -55,7 +58,7 @@ Then, run the scripts step by step. (You must make sure that each library is suc
  install_ACAP.sh
 ```
 
-4. Example
+### 4. Example
 
 Usage: ```./main path_to_folder [-opt]```
 
@@ -69,7 +72,7 @@ We have provided a test folder for the successful running of the code. In the fo
 
 ```sh
 cd ./ACAP-build/ACAP-build
-./main ../../test 1
+./main ../../test -opt 1
 ```
 
 ## Citation
