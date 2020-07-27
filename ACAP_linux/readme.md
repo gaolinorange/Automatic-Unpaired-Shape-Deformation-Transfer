@@ -19,7 +19,7 @@ IEEE Transactions on Visualization and Computer Graphics, 2019
 - [OpenMesh 7.0](https://www.openmesh.org/download/)
 - [CoMISo](https://graphics.rwth-aachen.de:9000/CoMISo/CoMISo)
 
-Note: we test the code on the OS platform with ```ubuntu 18.04.3, g++ 7.5, gcc 7.5```.
+Note: we test the code on the OS platform with ```ubuntu 18.04.3, g++ 7.5, gcc 7.5```. All above the dependencies are provided, which are located in folder ```3rd```. Of course, you also could download them from theirs offical websites and complie them by yourself.
 
 ## ACAP Library
 
