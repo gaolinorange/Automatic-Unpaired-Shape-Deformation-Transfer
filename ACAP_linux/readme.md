@@ -69,7 +69,7 @@ Where:
   path_to_folder    The path of shape folder.
   -opt 0/1          Use integer optimization or not.
 ```
-We have provided a test folder for the successful running of the code. In the folder ```test```, we also provide the GT ACAP feature files(```GT.txt``` and ```S_GT.txt```) for the three obj files ```1.obj, 2.obj, 3.obj```You can check the code by comparing the output files with GT ACAP feature files. The output files can be obtained by the following command, the files will be stored in your input path.
+In order to check whether the code runs successfully, we provide a simple test example. In the folder ```test```, we also provide the GT ACAP feature files(```GT.txt``` and ```S_GT.txt```) for the three obj files ```1.obj, 2.obj, 3.obj```. You can check the code by comparing the output files with GT ACAP feature files. The output files can be obtained by the following command, the files will be stored in your input path.
 
 ```sh
 cd ./ACAP-build/ACAP-build
@@ -78,7 +78,7 @@ cd ./ACAP-build/ACAP-build
 
 ## Citation
 
-If you find this useful for your research, please use the following.
+If you find this useful or use our code in your research, please cite our work by the following.
 
 ```
 @article{gao2019sparse,
