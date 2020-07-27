@@ -15,10 +15,6 @@ ELSE()
   SET(CMAKE_CXX_FLAGS "-llapack -lblas -pthread -fopenmp -O3 -Wall -fPIC -std=c++11 ${CMAKE_CXX_FLAGS}")
 ENDIF()
 
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -fopenmp")
-# SET(MPI_CXX_COMPILE_FLAGS "-fopenmp")
-# SET(DEAL_II_CXX_FLAGS "-fopenmp")
-
 # CoMISo
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/3rd/CoMISo)
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/ACAP-build/CoMISo-build)
@@ -74,10 +70,6 @@ ENDIF()
 LIST(APPEND ALL_LIBRARIES ${LIB_OPENMESH})
 
 
-# set(OpenMeshTools_LIBRARIES1 "${PROJECT_SOURCE_DIR}/ACAP-build/OpenMesh-build/install-custom/lib/libOpenMeshTools.so")
-# LIST(APPEND ALL_LIBRARIES ${OpenMeshTools_LIBRARIES1})
-
-
 # Gurobi 8.0, Openmesh 7.1 CoMISo eigen3 gmm-4.2, boost 1.65.1
 
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/src)
@@ -102,12 +94,7 @@ MACRO(ADD_EXE NAME)
   ADD_EXECUTABLE(${NAME} ${NAME}.cpp)
   TARGET_LINK_LIBRARIES(${NAME} ACAP gomp ${ALL_STATIC_LIBRARIES})
 ENDMACRO(ADD_EXE)
-# target_link_libraries(ACAP PRIVATE "${OpenMP_CXX_FLAGS}")
-# target_compile_options(ACAP PRIVATE "${OpenMP_CXX_FLAGS}")
-# set_target_properties(ACAP PROPERTIES
-# COMPILE_FLAGS "-pthread"
-# LINK_FLAGS "-pthread")
-#DEBUG
+
 ADD_EXE(main)
 
 

@@ -25,14 +25,15 @@ Note: we test the code on the OS platform with ```ubuntu 18.04.3, g++ 7.5, gcc 7
 
 ### 1. Boost and Blas & Lapack
 
+Install the two libraries.
 ```sh
 sudo apt-get install libboost-all-dev
-sudo apt install libopenblas-dev libblas-dev liblapack-dev
+sudo apt-get install libopenblas-dev libblas-dev liblapack-dev
 ```
 
 ### 2. Gurobi
 
-We have provide the ```gurobi8.0.1``` libiary in the folder ```3rd```, you can download it by yourself on the [GUROBI website](https://www.gurobi.com/downloads/gurobi-optimizer-eula/). Then, you should regist a academic license to active the software by the command:
+We have provide the ```gurobi8.0.1``` libiary in the folder ```3rd```, you can download it by yourself on the [GUROBI website](https://www.gurobi.com/downloads/gurobi-optimizer-eula/). You could only unzip the installation files with any opration. Then, you must regist a academic license to active the software by the command:
 
 ```
 ./bin/grbgetkey license-serial-number
@@ -48,7 +49,7 @@ git clone --recursive https://github.com/gaolinorange/Automatic-Unpaired-Shape-D
 cd Automatic-Unpaired-Shape-Deformation-Transfer/ACAP_linux
 ```
 
-Note: You need to modify the variable ${GUROBI_ROOT} in CMakeLists.txt and CoMISo/CMakeLists.txt
+Note: You need to modify the variable ${GUROBI_ROOT} in CMakeLists.txt
 
 Then, run the scripts step by step. (You must make sure that each library is successfully installed)
 
@@ -78,6 +79,8 @@ In order to check whether the code runs successfully, we provide a simple test e
 cd ./ACAP-build/ACAP-build
 ./main ../../test -opt 1
 ```
+
+Suggestions: It is best not to contain too many shapes in the input folder. 
 
 ## Citation
 
