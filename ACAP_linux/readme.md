@@ -63,7 +63,7 @@ Then, run the scripts step by step. (You must make sure that each library is suc
 
 Usage: ```./main path_to_folder [-opt] 0/1```
 
-Output: Two files(```LOGRNEW.txt``` and ```S.txt```), which stored a matrix with size```N * (V*9)``` respectively. ```N``` is the number of shapes in the ```path_to_folder```. ```V``` is the number of vertices of shape. Each row of file ```LOGRNEW.txt``` and ```S.txt``` represent the ACAP feature of a shape(For the detils of algorithm, please refer to sparse deformation [algorithm](https://arxiv.org/abs/1709.01250)). For the row 1, row 2,..., row 3 of feature files, every row coresponds to the Natural Sorting of names of shape. 
+Output: Two files(```LOGRNEW.txt``` and ```S.txt```), which stored a matrix with size```N * (V*9)``` respectively. ```N``` is the number of shapes in the ```path_to_folder```. ```V``` is the number of vertices of shape. Each row of file ```LOGRNEW.txt``` and ```S.txt``` represent the ACAP feature of a shape(For the detils of algorithm, please refer to sparse deformation [algorithm](https://arxiv.org/abs/1709.01250)). For the row 1, row 2,..., row 3 of feature files, every row coresponds to the [Natural Sorting](https://en.wikipedia.org/wiki/Natural_sort_order) of names of shape. 
 
 
 Where:
