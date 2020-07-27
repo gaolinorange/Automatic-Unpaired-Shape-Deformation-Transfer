@@ -4,9 +4,11 @@ The implementation of ACAP.
 
 Part of our sparse deformation [algorithm](https://arxiv.org/abs/1709.01250)
 
+```
 ACAP: Sparse Data Driven Mesh Deformation
 Lin Gao, Yu-Kun Lai, Jie Yang, Ling-Xiao Zhang, Shihong Xia, Leif Kobbelt
 IEEE Transactions on Visualization and Computer Graphics, 2019
+```
 
 
 ## Dependencies
@@ -22,7 +24,7 @@ Note: we test the code on the OS platform with ```ubuntu 18.04.3, g++ 7.5, gcc 7
 
 ## ACAP Library
 
-### 1. ```Boost``` and ```Blas & Lapack```
+### 1. Boost and Blas & Lapack
 
 ```sh
 sudo apt-get install libboost-all-dev
@@ -60,7 +62,7 @@ Then, run the scripts step by step. (You must make sure that each library is suc
 
 ### 4. Example
 
-Usage: ```./main path_to_folder [-opt]```
+Usage: ```./main path_to_folder [-opt] 0/1```
 
 Where:
 
