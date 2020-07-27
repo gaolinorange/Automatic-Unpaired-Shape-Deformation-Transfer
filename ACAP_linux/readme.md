@@ -1,8 +1,7 @@
 
 # As-Consistent-As-Possible Deformation Representation (ACAP)
 The implementation of ACAP.
-
-Part of our sparse deformation [algorithm](https://arxiv.org/abs/1709.01250)
+Part of our sparse deformation [algorithm](https://arxiv.org/abs/1709.01250).
 
 ```
 ACAP: Sparse Data Driven Mesh Deformation
