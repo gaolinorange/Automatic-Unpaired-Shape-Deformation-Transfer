@@ -15,11 +15,11 @@ IEEE Transactions on Visualization and Computer Graphics, 2019
 - [OpenMesh 7.0](https://www.openmesh.org/download/)
 - [CoMISo](https://graphics.rwth-aachen.de:9000/CoMISo/CoMISo)
 
-Note: we test the code on the platform with '''ubuntu 18.04.3, g++ 7.5, gcc 7.5'''.
+Note: we test the code on the OS platform with ```ubuntu 18.04.3, g++ 7.5, gcc 7.5```.
 
 ## ACAP Library
 
-1. For the library '''Boost''' and '''Blas & Lapack''', you can run the following command to install them
+1. For the library ```Boost``` and ```Blas & Lapack```, you can run the following command to install them
 
 ```sh
 sudo apt-get install libboost-all-dev
@@ -28,11 +28,11 @@ sudo apt install libopenblas-dev libblas-dev liblapack-dev
 
 2. Gurobi
 
-We have provide the '''gurobi8.0.1''' libiary in the folder '''3rd''', you can download it by yourself on the [GUROBI website](https://www.gurobi.com/downloads/gurobi-optimizer-eula/). Then, you should regist a academic license to active the software by the command:
+We have provide the ```gurobi8.0.1``` libiary in the folder ```3rd```, you can download it by yourself on the [GUROBI website](https://www.gurobi.com/downloads/gurobi-optimizer-eula/). Then, you should regist a academic license to active the software by the command:
 
-'''
+```
 ./bin/grbgetkey license-serial-number
-'''
+```
 
 Note: The above instructions also can be found in the GUROBI website.
 
@@ -57,7 +57,7 @@ Then, run the scripts step by step. (You must make sure that each library is suc
 
 4. Example
 
-Usage: ./main path_to_folder [-opt]
+Usage: ```./main path_to_folder [-opt]```
 
 Where:
 
@@ -65,7 +65,7 @@ Where:
   path_to_folder    The path of shape folder.
   -opt 0/1          Use integer optimization or not.
 ```
-We have provided a test folder for the successful running of the code. In the folder '''test''', we also provide the GT ACAP feature files('''LOGRNEW_GT.txt''' and '''S_GT.txt''') for the three obj files '''1.obj, 2.obj, 3.obj'''. You can check the code by comparing the output files with GT ACAP feature files. The output files can be obtained by the following command, the files will be stored in your input path.
+We have provided a test folder for the successful running of the code. In the folder ```test```, we also provide the GT ACAP feature files(```GT.txt``` and ```S_GT.txt```) for the three obj files ```1.obj, 2.obj, 3.obj```You can check the code by comparing the output files with GT ACAP feature files. The output files can be obtained by the following command, the files will be stored in your input path.
 
 ```sh
 cd ./ACAP-build/ACAP-build

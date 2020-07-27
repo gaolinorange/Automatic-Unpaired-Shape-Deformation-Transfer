@@ -21,7 +21,7 @@ We will include more details soon.
 
 ### Prerequisites
 - Windows is supported.
-- Linux is supported, the implementation is located in '''ACAP_linux'''.
+- Linux is supported, the implementation is located in ```ACAP_linux```.
 ### Dependencies
 - Install [GUROBI Optimizer 8.0](http://www.gurobi.com/), you must apply a license to active the gurobi to compute the larger optimizations.
 - Install [OpenMesh 7.0](https://www.openmesh.org/download/)
