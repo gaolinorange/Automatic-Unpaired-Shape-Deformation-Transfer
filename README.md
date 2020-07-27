@@ -15,9 +15,13 @@ We will include more details soon.
 
 ## Note for ACAP Lib
 
+### News
+
+- The ACAP Lib supports the Linux OS!
+
 ### Prerequisites
 - Windows is supported.
-- Linux comming soon.
+- Linux is supported, the implementation is located in '''ACAP_linux'''.
 ### Dependencies
 - Install [GUROBI Optimizer 8.0](http://www.gurobi.com/), you must apply a license to active the gurobi to compute the larger optimizations.
 - Install [OpenMesh 7.0](https://www.openmesh.org/download/)

@@ -1,0 +1,117 @@
+cmake_minimum_required (VERSION 2.6)
+project(ACAP)
+
+IF(NOT CMAKE_BUILD_TYPE)
+  SET(CMAKE_BUILD_TYPE Release)
+ENDIF()
+
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}")
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/3rd/CoMISo/cmake")
+IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  MESSAGE(STATUS "Build type: Debug")
+  SET(CMAKE_CXX_FLAGS "-llapack -lblas -pthread -fopenmp -O0 -Wall -fPIC -std=c++11 ${CMAKE_CXX_FLAGS}")
+ELSE()
+  MESSAGE(STATUS "Build type: Release")
+  SET(CMAKE_CXX_FLAGS "-llapack -lblas -pthread -fopenmp -O3 -Wall -fPIC -std=c++11 ${CMAKE_CXX_FLAGS}")
+ENDIF()
+
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -fopenmp")
+# SET(MPI_CXX_COMPILE_FLAGS "-fopenmp")
+# SET(DEAL_II_CXX_FLAGS "-fopenmp")
+
+# CoMISo
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/3rd/CoMISo)
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/ACAP-build/CoMISo-build)
+FIND_LIBRARY(LIB_COMISO CoMISo CoMISod
+            HINTS ${PROJECT_SOURCE_DIR}/ACAP-build/CoMISo-build/
+                  ${PROJECT_SOURCE_DIR}/ACAP-build/CoMISo-build/Build
+                  ${PROJECT_SOURCE_DIR}/ACAP-build/CoMISo-build/Build/lib
+                  ${PROJECT_SOURCE_DIR}/ACAP-build/CoMISo-build/Build/lib/CoMISo)
+IF(LIB_COMISO-NOTFOUND)
+  MESSAGE(SEND_ERROR "Cannot find CoMISo!")
+ELSE()
+  MESSAGE(STATUS "Found CoMISo @ ${LIB_COMISO}")
+ENDIF()
+LIST(APPEND ALL_LIBRARIES ${LIB_COMISO})
+
+#BOOST
+SET(Boost_USE_MULTITHREADED ON)
+FIND_PACKAGE(Boost COMPONENTS filesystem system REQUIRED)
+IF(Boost_FOUND)
+  INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
+  MESSAGE(STATUS "Found BOOST @ ${Boost_INCLUDE_DIR}")
+  LIST(APPEND ALL_LIBRARIES ${Boost_LIBRARIES})
+ELSE(Boost_FOUND)
+  MESSAGE(SEND_ERROR "Cannot find BOOST")
+ENDIF(Boost_FOUND)
+
+#GUROBI
+set(GUROBI_ROOT "/data/yangjie/ACAP_linux/3rd/gurobi801/linux64")
+set(GUROBI_LIBRARIES "${GUROBI_ROOT}/lib/libgurobi80.so" "${GUROBI_ROOT}/lib/libgurobi_c++.a")
+INCLUDE_DIRECTORIES(${GUROBI_ROOT}/include)
+LIST(APPEND ALL_LIBRARIES ${GUROBI_LIBRARIES})
+MESSAGE(STATUS "Found BOOST @ ${GUROBI_ROOT}/include")
+
+#gmm
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/3rd/gmm/include)
+
+#Eigen3
+# FIND_PACKAGE(EIGEN3 REQUIRED)
+find_package(EIGEN3)
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/3rd)
+
+#OpenMesh
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/ACAP-build/OpenMesh-build/install-custom/include)
+FIND_LIBRARY(LIB_OPENMESH OpenMeshCore
+             HINTS ${PROJECT_SOURCE_DIR}/ACAP-build/OpenMesh-build/install-custom/lib)
+FIND_LIBRARY(LIB_OPENMESH OpenMeshTools
+             HINTS ${PROJECT_SOURCE_DIR}/ACAP-build/OpenMesh-build/install-custom/lib)
+IF(LIB_OPENMESH-NOTFOUND)
+  MESSAGE(SEND_ERROR "Cannot find OpenMesh!")
+ELSE()
+  MESSAGE(STATUS "Found OpenMesh @ ${LIB_OPENMESH}")
+ENDIF()
+LIST(APPEND ALL_LIBRARIES ${LIB_OPENMESH})
+
+
+# set(OpenMeshTools_LIBRARIES1 "${PROJECT_SOURCE_DIR}/ACAP-build/OpenMesh-build/install-custom/lib/libOpenMeshTools.so")
+# LIST(APPEND ALL_LIBRARIES ${OpenMeshTools_LIBRARIES1})
+
+
+# Gurobi 8.0, Openmesh 7.1 CoMISo eigen3 gmm-4.2, boost 1.65.1
+
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/src)
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/3rd)
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR})
+
+MACRO(SEARCH_SOURCE NAME DIRPRJ)
+  FILE(GLOB_RECURSE header${NAME} "${PROJECT_SOURCE_DIR}/${DIRPRJ}/*.h" "${PROJECT_SOURCE_DIR}/${DIRPRJ}/*.hpp" "${PROJECT_SOURCE_DIR}/${DIRPRJ}/*.hh")
+  FILE(GLOB_RECURSE source${NAME} "${PROJECT_SOURCE_DIR}/${DIRPRJ}/*.cpp" "${PROJECT_SOURCE_DIR}/${DIRPRJ}/*.cc" "${PROJECT_SOURCE_DIR}/${DIRPRJ}/*.c")
+ENDMACRO(SEARCH_SOURCE)
+SEARCH_SOURCE(ACAP src)
+
+add_definitions(
+      -D_USE_MATH_DEFINES -DNOMINMAX -DDUSE_OPENMP -D_SCL_SECURE_NO_DEPRECATE
+  )
+#Only set project name if CoMISo is built as stand-alone library
+
+#BUILD
+ADD_LIBRARY(ACAP SHARED ${sourceACAP} ${headerACAP})
+TARGET_LINK_LIBRARIES(ACAP ${ALL_LIBRARIES})
+MACRO(ADD_EXE NAME)
+  ADD_EXECUTABLE(${NAME} ${NAME}.cpp)
+  TARGET_LINK_LIBRARIES(${NAME} ACAP gomp ${ALL_STATIC_LIBRARIES})
+ENDMACRO(ADD_EXE)
+# target_link_libraries(ACAP PRIVATE "${OpenMP_CXX_FLAGS}")
+# target_compile_options(ACAP PRIVATE "${OpenMP_CXX_FLAGS}")
+# set_target_properties(ACAP PROPERTIES
+# COMPILE_FLAGS "-pthread"
+# LINK_FLAGS "-pthread")
+#DEBUG
+ADD_EXE(main)
+
+
+
+
+
+

@@ -1,0 +1,12 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node2" href="$a01814.html" title="MyTraits" alt="" coords="287,5,361,32"/>
+<area shape="rect" id="node3" href="$a02254.html" title="Base class for all traits. " alt="" coords="5,216,173,243"/>
+<area shape="rect" id="node4" href="$a01866.html" title="AnalyzerTraits" alt="" coords="271,56,377,83"/>
+<area shape="rect" id="node5" href="$a02850.html" title="CustomTraits" alt="" coords="273,107,375,133"/>
+<area shape="rect" id="node6" href="$a02946.html" title="CustomTraitsVec2i" alt="" coords="257,157,391,184"/>
+<area shape="rect" id="node7" href="$a02458.html" title="Base class for all mesh traits using the OSGArrayKernelT. " alt="" coords="241,209,407,250"/>
+<area shape="rect" id="node8" href="$a02574.html" title="Adaptive Composite Subdivision framework. " alt="" coords="231,274,417,315"/>
+<area shape="rect" id="node9" href="$a02670.html" title="OpenMesh::Subdivider\l::Adaptive::Traits" alt="" coords="247,339,401,381"/>
+<area shape="rect" id="node10" href="$a02686.html" title="Uniform Composite Subdivision framework. " alt="" coords="234,405,414,446"/>
+<area shape="rect" id="node11" href="$a02802.html" title="Mesh traits for View Dependent Progressive Meshes. " alt="" coords="221,471,427,497"/>
+</map>
