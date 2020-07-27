@@ -9,7 +9,7 @@ if [ ! -d "CoMISo-build" ]; then
 fi
 cd CoMISo-build
 
-tar -xf ../../3rd/gurobi8.0.1_linux64.tar.gz
+tar -xf ../../3rd/gurobi8.0.1_linux64.tar.gz -C ../../3rd
 
 export GMM_DIR=../../3rd/gmm/include
 export EIGEN_DIR=../../3rd

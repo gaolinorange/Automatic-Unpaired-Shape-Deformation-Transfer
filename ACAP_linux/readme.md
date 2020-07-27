@@ -80,7 +80,7 @@ cd ./ACAP-build/ACAP-build
 ./main ../../test -opt 1
 ```
 
-Suggestions: It is best not to contain too many shapes in the input folder. 
+Suggestions: It is best not to contain too many shapes (>1000) in the input folder. 
 
 ## Citation
 
