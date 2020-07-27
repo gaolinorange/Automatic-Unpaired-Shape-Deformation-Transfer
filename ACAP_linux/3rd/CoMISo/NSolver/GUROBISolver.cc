@@ -376,6 +376,9 @@ solve_two_phase(NProblemInterface*                  _problem,                // 
   {
     GRBEnv   env   = GRBEnv();
     GRBModel model = GRBModel(env);
+	  //add by yangjie 
+	model.getEnv().set(GRB_IntParam_OutputFlag, 0);
+	model.set(GRB_IntParam_OutputFlag, 0);
 
     auto vars = allocate_variables(_problem, _discrete_constraints, model);
     set_start(_problem, model, vars, start_solution_output_path_);

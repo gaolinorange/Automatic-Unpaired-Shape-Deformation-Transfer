@@ -16,10 +16,7 @@ void PreprocessObj2Mat(std::string & inputfolder, bool opt)
 	std::cout<<"GUROBI Expiration DATE: ";
 	env->message(std::to_string(time_gurobi).c_str());
 	std::cout<<std::endl;
-	// std::cout << double(model.get(GRB_IntParam_OutputFlag)) << std::endl;
-	model.set(GRB_IntParam_OutputFlag, 0);
-	// std::cout << double(model.get(GRB_IntParam_OutputFlag)) << std::endl;
-	delete env;
+	//delete env;
 
 	//main
 	OpenMesh::IO::_OBJReader_();
@@ -73,9 +70,22 @@ void PreprocessObj2Mat(std::string & inputfolder, bool opt)
 
 int main(int argc, char *argv[])
 {
+	int opt = 0;
+	if (argc <= 3)
+    {
+        std::cout << "./main path_to_folder -opt 1or0 \n";
+        return 0;
+    }
+
+	if (argc > 3 && strcmp(argv[2], "-opt") == 0) {
+		sscanf(argv[3], "%d", &opt);
+	}
+
+    printf("./main %s -opt %s\n", argv[1], argv[3]);
+
 	std::string inputfolder = argv[1];
-	bool opt = bool(atoi(argv[2]));
-	PreprocessObj2Mat(inputfolder, opt);
+	// bool opt = bool(atoi(argv[2]));
+	PreprocessObj2Mat(inputfolder, bool(opt));
 
 	return 0;
 }

@@ -54,6 +54,7 @@ Note: You need to modify the variable ${GUROBI_ROOT} in CMakeLists.txt
 Then, run the scripts step by step. (You must make sure that each library is successfully installed)
 
 ```sh
+ chmod +x install_CoMISo.sh install_gmm.sh install_OpenMesh.sh install_ACAP.sh
  install_CoMISo.sh
  install_gmm.sh
  install_OpenMesh.sh

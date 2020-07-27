@@ -9,5 +9,6 @@ if [ ! -d "gmm-build" ]; then
 fi
 cd gmm-build
 
+chmod +x ../../3rd/gmm/configure
 ../../3rd/gmm/configure --prefix=$(pwd)/install-custom
 make install
