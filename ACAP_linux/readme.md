@@ -63,13 +63,16 @@ Then, run the scripts step by step. (You must make sure that each library is suc
 
 Usage: ```./main path_to_folder [-opt] 0/1```
 
+Output: Two files(```LOGRNEW.txt``` and ```S.txt```), which stored a matrix with size```N * (V*9)``` respectively. ```N``` is the number of shapes in the ```path_to_folder```. ```V``` is the number of vertices of shape. Each row of file ```LOGRNEW.txt``` and ```S.txt``` represent the ACAP feature of a shape(For the detils of algorithm, please refer to sparse deformation [algorithm](https://arxiv.org/abs/1709.01250)). For the row 1, row 2,..., row 3 of feature files, every row coresponds to the Natural Sorting of names of shape. 
+
+
 Where:
 
 ```sh
   path_to_folder    The path of shape folder.
   -opt 0/1          Use integer optimization or not.
 ```
-In order to check whether the code runs successfully, we provide a simple test example. In the folder ```test```, we also provide the GT ACAP feature files(```GT.txt``` and ```S_GT.txt```) for the three obj files ```1.obj, 2.obj, 3.obj```. You can check the code by comparing the output files with GT ACAP feature files. The output files can be obtained by the following command, the files will be stored in your input path.
+In order to check whether the code runs successfully, we provide a simple test example. In the folder ```test```, we also provide the GT ACAP feature files(```LOGRNEW_GT.txt``` and ```S_GT.txt```) for the three obj files ```1.obj, 2.obj, 3.obj```. You can check the code by comparing the output files with GT ACAP feature files. The output files can be obtained by the following command, the files will be stored in your input path.
 
 ```sh
 cd ./ACAP-build/ACAP-build
