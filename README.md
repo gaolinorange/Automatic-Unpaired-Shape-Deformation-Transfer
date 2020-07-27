@@ -10,7 +10,7 @@ We will include more details soon.
 - Python 2 or 3
 - NVIDIA GPU (larger than 8G) + CUDA cuDNN
 - Tensorflow 1.10
-- We add a script 'matlabscript/GetICPandLFDDist.m' to compute the distance(similarity) between two models.
+- We add a script ```matlabscript/GetICPandLFDDist.m``` to compute the distance(similarity) between two models.
 
 
 ## Note for ACAP Lib
@@ -45,5 +45,13 @@ If you find this useful for your research, please use the following.
   pages={1--15},
   year={2018},
   publisher={Association for Computing Machinery (ACM)}
+}
+
+@article{gao2019sparse,
+  title={Sparse data driven mesh deformation},
+  author={Gao, Lin and Lai, Yu-Kun and Yang, Jie and Ling-Xiao, Zhang and Xia, Shihong and Kobbelt, Leif},
+  journal={IEEE transactions on visualization and computer graphics},
+  year={2019},
+  publisher={IEEE}
 }
 ```
