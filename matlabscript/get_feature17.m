@@ -1,5 +1,5 @@
 function get_feature17(densemesh,simmesh,matpath)
-% get the feature tog 17 with pooling and the convolution
+% get the feature with pooling and the convolution
 % FLOGRNEW,FS,neighbour1,,neighbour2,mapping,demapping
 if nargin<3
     matpath=densemesh;
