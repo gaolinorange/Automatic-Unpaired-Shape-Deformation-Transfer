@@ -150,9 +150,11 @@ void new_ARAPDeform::GetFeatureMat2(std::string & currentpath, std::string & inp
 		if (i != 0)
 		{
 			if (opt==true)
-			{axis_anglenew = SolveOpt(axis, angle, edge_adjacent, mxJrL, mxIrL, mxPrL);// time  is 120 and use init is false
-			}
+			{
+			axis_anglenew = SolveOpt(axis, angle, edge_adjacent, mxJrL, mxIrL, mxPrL);// time  is 120 and use init is false
+			
 			fvs[i].rots.assign(axis_anglenew.begin(),axis_anglenew.end());
+			}
 			
 /* 			for (int j = 0;j < fvs[0].rots.size(); j++)
 			{
