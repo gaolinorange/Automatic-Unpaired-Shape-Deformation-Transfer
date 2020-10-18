@@ -9,7 +9,10 @@ end
 vdensemeshlist=dir([densemesh,'\*.obj']);
 [~,i]=sort_nat({vdensemeshlist.name});
 vdensemeshlist=vdensemeshlist(i);
-fv=load([densemesh,'\simp\FeatureMat1.mat']);
+% fv=load([densemesh,'\simp\FeatureMat1.mat']);
+fv.LOGRNEWS = dlmread([densemesh,'\LOGRNEW.txt'])
+fv.S = dlmread([densemesh,'\S.txt'])
+
 
 [vdensemesh,~,~,~,~,VVdense,cotweight_dense]=cotlp([densemesh,'\',vdensemeshlist(1).name]);
     if nargin<2
